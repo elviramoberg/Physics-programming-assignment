@@ -1,18 +1,28 @@
-# This is a sample Python script.
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+from math import sqrt
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+v_y0 = 0
+z_t0 = {1, 0, 0, v_y0}
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def angular_momentum(x, y, v_y, v_x, m):
+    L = m*(x*v_y - y*v_x)
+    return L
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
-#hejhejhej
+def kinetic_energy(v_y, v_x, m):
+    K = m/2*((v_x)**2+(v_y)**2)
+    return K
+
+
+def potential_energy(x, y, k):
+    U = -k/sqrt(x**2+y**2)
+    return U
+
+
+def total_energy(K, U):
+    E_tot = K - U
+    return E_tot
+
