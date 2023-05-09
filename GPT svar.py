@@ -2,52 +2,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
-# Define the system of differential equations
-def f(t, y, a, b, c, d):
-    x, y, z, w = y
-    dxdt = y
-    dydt = a * (1 - x**2) * y - x + c * z
-    dzdt = w
-    dwdt = b * (1 - z**2) * w - z + d * x
-    return [dxdt, dydt, dzdt, dwdt]
+# Funktion som beräknar den differentialekvation som vi vill lösa
+def motion_equations(t, y, k, m, g):
+    x1, v1, x2, v2 = y
+    dx1_dt = v1
+    dv1_dt = -k/m*x1 - g
+    dx2_dt = v2
+    dv2_dt = -k/m*x2 - g
+    return [dx1_dt, dv1_dt, dx2_dt, dv2_dt]
 
-# Set the parameter values
-a = 1.0
-b = 3.0
-c = 1.0
-d = 5.0
+# Definiera de olika variablerna
+k = 1
+m = 1
+g = 9.81
+initial_conditions = [1, 0, -1, 0]
+t_span = [0, 10]
 
-# Set the initial conditions
-x0 = 0.1
-y0 = 0.2
-z0 = 0.3
-w0 = 0.4
+# Anropa solve_ivp-funktionen för att lösa differentialekvationen
+solution = solve_ivp(motion_equations, t_span, initial_conditions, args=(k, m, g), dense_output=True, rtol=1e-6)
 
-y0_vec = [x0, y0, z0, w0]
+# Plotta resultaten
+t_eval = np.linspace(t_span[0], t_span[1], 1000)
+y_eval = solution.sol(t_eval)
 
-# Set the time range to solve over
-t_span = [0, 100]
-
-# Set the solver options
-opts = {
-    'rtol': 1e-6,    # Relative tolerance
-    'atol': 1e-6,    # Absolute tolerance
-    'max_step': 0.1  # Maximum time step
-}
-
-# Solve the differential equation
-sol = solve_ivp(lambda t, y: f(t, y, a, b, c, d), t_span, y0_vec, dense_output=True, **opts)
-
-# Extract the solution components
-t = sol.t
-x, y, z, w = sol.y
-
-# Plot the solution
-fig, ax = plt.subplots()
-ax.plot(x, y, label='x-y')
-ax.plot(z, w, label='z-w')
-ax.legend()
-ax.set_xlabel('x, z')
-ax.set_ylabel('y, w')
-ax.set_title('Phase space')
+plt.plot(y_eval[0], y_eval[1], label='Massa 1')
+plt.plot(y_eval[2], y_eval[3], label='Massa 2')
+plt.xlabel('x (m)')
+plt.ylabel('v (m/s)')
+plt.title('Rörelse hos två massor som är kopplade med en fjäder')
+plt.legend()
 plt.show()
