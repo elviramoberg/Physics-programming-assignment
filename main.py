@@ -1,3 +1,4 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
@@ -57,10 +58,10 @@ def find_trajectory():
     v_y = sol.y[3]
     t = sol.t
 
-    # Compute the energy at each time point
-    K = [kinetic_energy(v_y[i], v_x[i], m) for i in range(len(t))]
-    U = [potential_energy(x[i], y[i], k) for i in range(len(t))]
-    E_tot = [total_energy(K[i], U[i]) for i in range(len(t))]
+    # Compute the energy
+    K = kinetic_energy(v_y, v_x, m)
+    U = potential_energy(x, y, k)
+    E_tot = total_energy(K, U)
 
     # Compute the angular momentum
     L = angular_momentum(x, y, v_y, v_x, m)
@@ -72,18 +73,19 @@ def find_trajectory():
     plt.ylabel('y')
     plt.title('Trajectory of a particle under inverse square force')
 
-    # Plot the energy diagram
-    fig, ax = plt.subplots()
-    fig.suptitle('Energy of a particle under inverse square force')
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Energy')
-    ax.plot(t, K, label='Kinetic energy')
-    ax.plot(t, U, label='Potential energy')
-    ax.plot(t, E_tot, label='Total energy')
-    ax.plot(t, [E_tot[0]] * len(t), 'k--', label='Initial energy')
-    ax.legend()
+    # Plot the energy and angular momentum
+    fig, axs = plt.subplots(2)
+    fig.suptitle('Energy and angular momentum of a particle under inverse square force')
+    axs[0].plot(t, K, label='Kinetic energy')
+    axs[0].plot(t, U, label='Potential energy')
+    axs[0].plot(t, E_tot, label='Total energy')
+    axs[0].legend()
+    axs[0].set_xlabel('Time')
+    axs[0].set_ylabel('Energy')
+    axs[1].plot(t, L)
+    axs[1].set_xlabel('Time')
+    axs[1].set_ylabel('Angular momentum')
+    plt.show()
 
 
 find_trajectory()
-
-#hej
