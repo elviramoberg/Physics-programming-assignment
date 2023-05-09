@@ -39,7 +39,7 @@ def calculate_energy_components(x0, y0, vx0, vy0, tf, dt):
     E = K + U
     return sol.t, K, U, E
 
-def plot_energy(x0, y0, vx0, vy0_values, tf, dt):
+def plot_energy_components(x0, y0, vx0, vy0_values, tf, dt):
     plt.figure(figsize=(8, 6))
     for vy0 in vy0_values:
         t, K, U, E = calculate_energy_components(x0, y0, vx0, vy0, tf, dt)
@@ -50,6 +50,27 @@ def plot_energy(x0, y0, vx0, vy0_values, tf, dt):
     plt.xlabel('time')
     plt.ylabel('Energies')
     plt.title("Graphs of energies")
+    plt.legend()
+    plt.show()
+
+def plot_energy(vy0_values):
+    x0, y0, vx0 = 1, 0, 0
+    dt = 0.1
+    tf = 30
+    for vy0 in vy0_values:
+        z0 = np.array([x0, y0, vx0, vy0])
+        sol = solve_ivp(Object, (0, tf), z0, t_eval=np.arange(0, tf, dt))
+        K = 0.5 * (sol.y[2] ** 2 + sol.y[3] ** 2)
+        U = -1 / np.sqrt(sol.y[0] ** 2 + sol.y[1] ** 2)
+        E = K + U
+
+        plt.plot(sol.t, E, label=f'E')
+        plt.plot(sol.t, U, label=f'U')
+        plt.plot(sol.t, K, label=f'K')
+
+    plt.xlabel('time')
+    plt.ylabel('Energies')
+    plt.title("Graphs of energies for different initial velocities")
     plt.legend()
     plt.show()
 
@@ -66,7 +87,8 @@ tf = 30
 plot_trajectories(x0, y0, vx0, vy0_values, tf, dt)
 
 # Plotting time evolution of energy components
-plot_energy()
+vy0_values = [0.5, 1, 1.2, np.sqrt(2), 2]
+plot_energy(vy0_values)
 
 
 
