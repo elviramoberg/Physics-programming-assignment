@@ -29,7 +29,7 @@ def total_energy(K, U):
     return E
 
 
-def angular_momentum(x, y, v_y, v_x, m):
+def angular_momentum(x, y, v_x, v_y, m):
     L = m*(x*v_y - y*v_x)
     return L
 
@@ -55,13 +55,15 @@ def plot_trajectories(x0, y0, v_x0, v_y0_values, t_f, t_int):
         x_sol, y_sol = calculate_trajectory(x0, y0, v_x0, v_y0, t_f, t_int)
         plt.plot(x_sol, y_sol, label=f'vy0 = {round(float(v_y0),1)}')
 
-    plt.title("Object Trajectory")
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.xlim([-3, 1.5])
-    plt.ylim([-2, 3])
-    plt.legend()
-    plt.show()
+        plt.title("Object Trajectory")
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.xlim([-3, 2])
+        plt.ylim([-2, 2])
+        plt.axhline(y=0, color='gray', linewidth=0.5)
+        plt.axvline(x=0, color='gray', linewidth=0.5)
+        plt.legend()
+        plt.show()
 
 
 def calculate_energy_components(x0, y0, vx0, vy0, t_f, t_int):
@@ -83,11 +85,13 @@ def plot_energy_components(x0, y0, vx0, vy0_values, t_f, t_int):
         plt.plot(t, U, label=f'U(t) for vy0 = {round(float(vy0),1)}')
         plt.plot(t, K, label=f'K(t) for vy0 = {round(float(vy0),1)}')
 
-    plt.title("Energy development")
-    plt.xlabel('t')
-    plt.ylabel('Energies')
-    plt.legend()
-    plt.show()
+        plt.title("Energy development")
+        plt.xlabel('t')
+        plt.ylabel('Energies')
+        plt.axhline(y=0, color='gray', linewidth=0.5)
+        plt.axvline(x=0, color='gray', linewidth=0.5)
+        plt.legend()
+        plt.show()
 
 
 def calculate_angular_momentum(x0, y0, vx0, vy0, t_f, t_int):
@@ -104,11 +108,14 @@ def plot_angular_momentum(x0, y0, vx0, vy0_values, t_f, t_int):
         t, L = calculate_angular_momentum(x0, y0, vx0, vy0, t_f, t_int)
         plt.plot(t, L, label=f'L(t) for vy0 = {round(float(vy0),1)}')
 
-    plt.title("Angular momentum development")
-    plt.xlabel('t')
-    plt.ylabel('Angular momentum')
-    plt.legend()
-    plt.show()
+        plt.title("Angular momentum development")
+        plt.xlabel('t')
+        plt.ylabel('Angular momentum')
+        plt.axhline(y=0, color='gray', linewidth=0.5)
+        plt.axvline(x=0, color='gray', linewidth=0.5)
+        plt.legend()
+        plt.show()
+
 
 # Plotting trajectories
 plot_trajectories(x0, y0, v_x0, v_y0_values, t_f, t_int)
