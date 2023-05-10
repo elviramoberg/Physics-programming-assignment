@@ -43,10 +43,15 @@ def equations_of_motion(t, z):
     return [v_x, v_y, a_x, a_y]
 
 
-def calculate_trajectory(x0, y0, v_x0, v_y0, t_f, t_int):
+def calculate_solution(x0, y0, v_x0, v_y0, t_f, t_int):
     t_span = (0, t_f)
     z0 = np.array([x0, y0, v_x0, v_y0])
-    diff_sol = solve_ivp(equations_of_motion, t_span, z0, t_eval=[i*t_int for i in range(int(t_f/t_int)+1)])
+    diff_sol = solve_ivp(equations_of_motion, t_span, z0, t_eval=[i*t_int for i in range(int(t_f/t_int)+1)], max_step=0.01)
+    return diff_sol
+
+
+def calculate_trajectory(x0, y0, v_x0, v_y0, t_f, t_int):
+    diff_sol = calculate_solution(x0, y0, v_x0, v_y0, t_f, t_int)
     return diff_sol.y[0], diff_sol.y[1]     # returnerar vektorer med x- och y-positionerna av banan
 
 
@@ -67,9 +72,7 @@ def plot_trajectories(x0, y0, v_x0, v_y0_values, t_f, t_int):
 
 
 def calculate_energy_components(x0, y0, vx0, vy0, t_f, t_int):
-    t_span = (0, t_f)
-    z0 = np.array([x0, y0, vx0, vy0])
-    diff_sol = solve_ivp(equations_of_motion, t_span, z0, t_eval=[i * t_int for i in range(int(t_f / t_int) + 1)])
+    diff_sol = calculate_solution(x0, y0, vx0, vy0, t_f, t_int)
 
     K = kinetic_energy(diff_sol.y[2], diff_sol.y[3], m)     # skickar in x- och y-hastigheterna som vektorer
     U = potential_energy(diff_sol.y[0], diff_sol.y[1], k)   # skickar in x- och y-positionerna som vektorer
@@ -97,7 +100,7 @@ def plot_energy_components(x0, y0, vx0, vy0_values, t_f, t_int):
 def calculate_angular_momentum(x0, y0, vx0, vy0, t_f, t_int):
     t_span = (0, t_f)
     z0 = np.array([x0, y0, vx0, vy0])
-    diff_sol = solve_ivp(equations_of_motion, t_span, z0, t_eval=[i * t_int for i in range(int(t_f / t_int) + 1)])
+    diff_sol = solve_ivp(equations_of_motion, t_span, z0, t_eval=[i * t_int for i in range(int(t_f / t_int) + 1)], max_step=0.01)
 
     L = angular_momentum(diff_sol.y[0], diff_sol.y[1], diff_sol.y[2], diff_sol.y[3], m)
     return diff_sol.t, L
@@ -108,13 +111,13 @@ def plot_angular_momentum(x0, y0, vx0, vy0_values, t_f, t_int):
         t, L = calculate_angular_momentum(x0, y0, vx0, vy0, t_f, t_int)
         plt.plot(t, L, label=f'L(t) for vy0 = {round(float(vy0),1)}')
 
-        plt.title("Angular momentum development")
-        plt.xlabel('t')
-        plt.ylabel('Angular momentum')
-        plt.axhline(y=0, color='gray', linewidth=0.5)
-        plt.axvline(x=0, color='gray', linewidth=0.5)
-        plt.legend()
-        plt.show()
+    plt.title("Angular momentum development")
+    plt.xlabel('t')
+    plt.ylabel('Angular momentum')
+    plt.axhline(y=0, color='gray', linewidth=0.5)
+    plt.axvline(x=0, color='gray', linewidth=0.5)
+    plt.legend()
+    plt.show()
 
 
 # Plotting trajectories
